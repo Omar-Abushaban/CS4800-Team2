@@ -11,13 +11,17 @@ import entity.Player;
 public class GamePanel extends JPanel implements Runnable{
 	
 	// SCREEN SETTINGS/DIMENSIONS
-	final int screenWidth = 768;
-	final int screenHeight = 576;
+	final int screenWidth = 1600;
+	final int screenHeight = 900;
 	
 	// GAME
 	public KeyHandler keyH = new KeyHandler(this);
 	int FPS = 60;
 	Thread gameThread;
+	String winner;
+	
+	// ACHIEVEMENTS
+	public Achievements achievements = new Achievements(this);
 	
 	// UI
 	UI ui = new UI(this);
@@ -28,9 +32,9 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	// GAME STATES
 	enum GameState {
-		MainMenu, CharacterSelect, InGame, GameOver;
+		MainMenu, AchievementsMenu, Options, CharacterSelect, InGame, GameOver;
 	}
-	GameState gameState;
+	GameState gameState = GameState.MainMenu;
 	
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -39,9 +43,10 @@ public class GamePanel extends JPanel implements Runnable{
 		this.addKeyListener(keyH);
 		this.setFocusable(true);
 	}
+
 	
 	public void setupGame() {
-		gameState = GameState.MainMenu;
+		// Pass
 	}
 	
 	public void startGameThread() {
@@ -84,14 +89,21 @@ public class GamePanel extends JPanel implements Runnable{
 		// DRAW ACCORDING TO GAME STATE
 		switch(gameState) {
 		case CharacterSelect:
+			ui.draw(g2);
 			break;
 		case GameOver:
+			ui.draw(g2);
 			break;
 		case InGame:
-			player1.render(g2);
-			player2.render(g2);
+			ui.draw(g2);
 			break;
 		case MainMenu:
+			ui.draw(g2);
+			break;
+		case AchievementsMenu:
+			ui.draw(g2);
+			break;
+		case Options:
 			ui.draw(g2);
 			break;
 		default:
