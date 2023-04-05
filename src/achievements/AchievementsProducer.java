@@ -27,32 +27,33 @@ public class AchievementsProducer implements Runnable {
 			achievements = gp.achievements.achievementsArray;
 		}
 		
-		if (!achievements[0]) {
+		if (!achievements[1]) {
 			// Complete your first game!
-			achievementGet(0);
-			AchievementsConsumer achievement0 = new AchievementsConsumer(gp, 0);
+			achievementGet(1);
+			AchievementsConsumer achievement0 = new AchievementsConsumer(gp, 1);
 			achievement0.start();
 		}
-		if (!achievements[1]) {
+		if (!achievements[2]) {
 			// Win a game standing in starting spot
 		}
-		if (!achievements[2]) {
+		if (!achievements[3]) {
 			// Kill a player who hasn't moved/made any inputs all game
 		}
-		if (!achievements[3]) {
+		if (!achievements[4]) {
 			// Win without taking damage
 		}
 	}
 
 	private void checkForInGameAchievements(){
 		synchronized(gp.achievements.achievementsArray){
-			if (!gp.achievements.achievementsArray[4]) {
+			achievements = gp.achievements.achievementsArray;
+		}
+			if (!achievements[0]) {
 				// Start a game for the first time!
-				achievementGet(4);
-				AchievementsConsumer achievement4 = new AchievementsConsumer(gp, 4);
+				achievementGet(0);
+				AchievementsConsumer achievement4 = new AchievementsConsumer(gp, 0);
 				achievement4.start();
 			}			
-		}
 	}
 
 	private void achievementGet(int i) {

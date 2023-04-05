@@ -10,19 +10,19 @@ import java.util.concurrent.locks.ReentrantLock;
 import main.GamePanel;
 
 public class Achievements {
-	final static int numTotalAchievements = 5;
+	public final static int numTotalAchievements = 5;
 	String filePath;
 	File file;
 	Scanner scanner;
 	FileWriter writer;
 	GamePanel gp;
 	Thread producerThread;
-	long startTime;
-	long endTime;
 	boolean isDisplaying;
 	int displayingAchievement = -1; // KEEP THIS -1 (Means nothing is displaying)!
 	public boolean[] achievementsArray; 
-	public String[] achievementsDescriptions = {"Complete your first game!", "Win a game standing in starting spot", "Kill an AFK Player", "Win without taking damage", "Play your first game"};
+	public String[] achievementsTitles = {"Just Starting", "The Noob", "Back to Square One", "The AFKiller", "Flawless"};
+	public String[] achievementsDescriptions = {"Play your first game", "Complete your first game", "Win a game standing in starting spot", "Kill an AFK Player", 
+												"Win without taking damage"};
 	ReentrantLock isDisplayingLock 			= new ReentrantLock();
 	ReentrantLock displayingAchievementLock = new ReentrantLock();
 	ReentrantLock fileLock 					= new ReentrantLock();
@@ -133,4 +133,19 @@ public class Achievements {
 		producerThread.start();
 	}
 	
+	
+	public String getAchievementDescription(int i) {
+		return achievementsDescriptions[i];
+	}
+	
+	
+	public String getAchievementTitle(int i) {
+		return achievementsTitles[i];
+	}
+	
+	public boolean getHasUnlocked(int i) {
+		synchronized(achievementsArray) {
+			return achievementsArray[i];
+		}
+	}
 }

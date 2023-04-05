@@ -52,6 +52,61 @@ public class UI{
 		g2.setColor(new Color(51, 56, 166));
 		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 	}
+	
+	private void drawAchievementsMenu(){
+		// BG COLOR
+		g2.setColor(new Color(33, 33, 33));
+		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+		
+		// TITLE TEXT
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 96F)); // Bold and 96 Font Size
+		String text = "ACHIEVEMENTS";
+		int x = centerX(text);
+		int y = (int) (gp.screenHeight / 7.5);
+		// TITLE COLORS
+		g2.setColor(Color.black);
+		g2.drawString(text, x+3, y+3); // Offset for black shadow
+		g2.setColor(Color.decode("#FFC700"));
+		g2.drawString(text, x, y); // Render white text on top
+		
+		// Individual Achievements
+		y += 100;
+		for (int i = 0; i < gp.achievements.numTotalAchievements; i++) {
+			// Black outline
+			g2.setColor(Color.black);
+			x = gp.screenWidth/8;
+			int xWidth = gp.screenWidth - gp.screenWidth/4;
+			int yHeight = 100;
+			int boxEnd = y + yHeight;
+			g2.fillRect(x, y, xWidth, yHeight);
+			// Green/red outer box
+			String colorCode = gp.achievements.getHasUnlocked(i) ? "#0C1B00" : "#1B0000";
+			g2.setColor(Color.decode(colorCode));
+			x += 2;
+			y += 2;
+			xWidth -= 4;
+			yHeight -= 4;
+			g2.fillRect(x, y, xWidth, yHeight);
+			
+			// Achievement Title
+			g2.setColor(Color.white);
+			text = gp.achievements.getAchievementTitle(i);
+			g2.setFont(g2.getFont().deriveFont(Font.BOLD, 40F));
+			x += 8;
+			y += 40 + 5;
+			g2.drawString(text, x, y);
+			
+			// Achievement Description
+			g2.setColor(Color.decode("#5E5E5E"));
+			text = gp.achievements.getAchievementDescription(i);
+			g2.setFont(g2.getFont().deriveFont(24F));
+			y = boxEnd - 10;
+			g2.drawString(text, x, y);
+			
+			y = boxEnd + 5;
+		}
+	}
+
 
 	private void drawAchievementOverlay(){
 		g2.setColor(new Color(10, 10, 10));
@@ -66,9 +121,7 @@ public class UI{
 		g2.drawString(text, x, y); // Render white text on top
 		// ACHIEVEMENT TEXT
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 24F)); // Bold and 96 Font Size
-		synchronized(gp.achievements.achievementsArray){
-			text = gp.achievements.achievementsDescriptions[gp.achievements.getDisplayingNum()];			
-		}
+		text = gp.achievements.achievementsDescriptions[gp.achievements.getDisplayingNum()];			
 		x = centerX(text);
 		y += 24 + 4;
 		// ACHIEVEMENT COLORS
@@ -184,24 +237,6 @@ public class UI{
 		
 		// DRAW "Selection Icon"
 		g2.drawString(">", (int)mainMenuXYs[menuIterator].getX()-30, (int)mainMenuXYs[menuIterator].getY());
-	}
-	
-	
-	private void drawAchievementsMenu(){
-		// BG COLOR
-		g2.setColor(new Color(33, 33, 33));
-		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
-		
-		// TITLE TEXT
-		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 96F)); // Bold and 96 Font Size
-		String text = "ACHIEVEMENTS";
-		int x = centerX(text);
-		int y = (int) (gp.screenHeight / 7.5);
-		// TITLE COLORS
-		g2.setColor(Color.black);
-		g2.drawString(text, x+3, y+3); // Offset for black shadow
-		g2.setColor(Color.decode("#FFC700"));
-		g2.drawString(text, x, y); // Render white text on top
 	}
 	
 	
