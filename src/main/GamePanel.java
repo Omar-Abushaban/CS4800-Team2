@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import achievements.Achievements;
 import entity.Player;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -31,10 +32,10 @@ public class GamePanel extends JPanel implements Runnable{
 	Player player2 = new Player(2);
 	
 	// GAME STATES
-	enum GameState {
+	public enum GameState {
 		MainMenu, AchievementsMenu, Options, CharacterSelect, InGame, GameOver;
 	}
-	GameState gameState = GameState.MainMenu;
+	public GameState gameState = GameState.MainMenu;
 	
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));

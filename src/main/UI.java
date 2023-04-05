@@ -43,10 +43,8 @@ public class UI{
 			break;
 		}
 		
-		// Checks for recent achievement notification to overlay
-		if (gp.achievements.getIsDisplaying()) {
+		if (gp.achievements.getDisplayingNum() != -1)
 			drawAchievementOverlay();
-		}
 	}
 	
 	
@@ -56,18 +54,26 @@ public class UI{
 	}
 
 	private void drawAchievementOverlay(){
-		g2.setColor(new Color(33, 33, 33));
-		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight/5);
-		// ACHIEVEMENT TEXT
-		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 96F)); // Bold and 96 Font Size
-		String text = "ACHIEVEMENT GET";
+		g2.setColor(new Color(10, 10, 10));
+		g2.fillRect(gp.screenWidth/4, 0, gp.screenWidth/2, 48+24+14);
+		// ACHIEVEMENT COMPLETE! TEXT
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 48F)); // Bold and 96 Font Size
+		String text = "ACHIEVEMENT COMPLETE!";
 		int x = centerX(text);
-		int y = (int)(gp.screenHeight / 7.5);
-		// GAMEOVER COLORS
-		g2.setColor(Color.black);
-		g2.drawString(text, x+3, y+3); // Offset for black shadow
-		g2.setColor(Color.white);
+		int y = (48);
+		// ACHIEVEMENT COMPLETE! COLORS
+		g2.setColor(Color.decode("#FFC700"));
 		g2.drawString(text, x, y); // Render white text on top
+		// ACHIEVEMENT TEXT
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 24F)); // Bold and 96 Font Size
+		synchronized(gp.achievements.achievementsArray){
+			text = gp.achievements.achievementsDescriptions[gp.achievements.getDisplayingNum()];			
+		}
+		x = centerX(text);
+		y += 24 + 4;
+		// ACHIEVEMENT COLORS
+		g2.setColor(Color.white);
+		g2.drawString(text, x, y);
 	}
 
 	private void drawGameOver(){

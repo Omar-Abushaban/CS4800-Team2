@@ -17,7 +17,7 @@ public class Main{
 		gamePanel.setupGame();
 		gamePanel.startGameThread();
 		
-		
+		gamePanel.achievements.startProducerThread();
 		
 		window.setLocationRelativeTo(null); // center of screen
 		window.setVisible(true);
