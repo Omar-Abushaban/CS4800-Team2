@@ -67,11 +67,20 @@ public class Keybinds{
 		}
 	}
 	
-	private int getActionIndex(String action) {
+	private int getIndex(String action) {
 		if (actionToIndex.get(action) != null)
 			return actionToIndex.get(action);
-		else
-			return -1;
+		
+		return -1;
+	}
+	
+	public int getKeybind(String action) {
+		int i = getIndex(action);
+		if (i != -1) {
+			return keybinds[i];
+		}
+		
+		return -1;
 	}
 	
 	private void saveKeybinds() {
@@ -89,10 +98,10 @@ public class Keybinds{
 		}			
 	}
 	
-	public void setKeybindUnsafe(String action, int keyCode) {
-		int actionIndex = getActionIndex(action);
+	public void setKeybind(String action, int keyCode) {
+		int actionIndex = getIndex(action);
 		if (actionIndex != -1) {
-			keybinds[getActionIndex(action)] = keyCode;			
+			keybinds[actionIndex] = keyCode;			
 		}
 	}
 }
