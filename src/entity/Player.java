@@ -1,32 +1,18 @@
 package entity;
 import java.awt.Graphics2D;
-import java.io.File;
-import java.util.Hashtable;
 
-public class Player extends FightingGameEntity implements Runnable{
-	Hashtable<String, Integer> keybinds = new Hashtable<String, Integer>();
-	
-	public Player(int playerNumber) {
-		// Check if there exist saved KeyBinds and load if so
-		File f = new File("keybind_" + Integer.toString(playerNumber));
-		if (f.isFile()) {
-			// Code to iterate over file until each delimiter, and load key value into corresponding Hashmap key
-		}
-	}
-	
-	public boolean setKeybind(String action, int keyCode) {
-		// Return false if already binded key or action is not valid
-		if (!keybinds.containsKey(action) || keybinds.containsValue(keyCode)) {
-			return false;
-		}
-		else {
-			keybinds.put(action, keyCode);
-			return true;
-		}
-	}
+import main.GamePanel;
+import main.KeyHandler;
 
-	public Hashtable<String, Integer> getKeybinds(){
-		return keybinds;
+public class Player extends Entity implements Runnable{
+	KeyHandler keyH;
+	GamePanel gp;
+	String name;
+	
+	public Player(String playerName, GamePanel gp, KeyHandler kh) {
+		this.name = playerName;
+		this.gp = gp;
+		this.keyH = kh;
 	}
 	
 	public void setMovementAnimations(int frame) {
@@ -42,16 +28,8 @@ public class Player extends FightingGameEntity implements Runnable{
 		return false; // put some logic around returning true/false
 	}
 	
-	private void updateGameState() {
-		// Updates the positions and status of both players based on their inputs and the game rules
-	}
-	
-	private void checkForInput() {
-		// Checks for input from both players and updates their respective inputs
-	}
-	
-	private void synchronizePlayers() {
-		// Ensures that both players are updating the game state simultaneously
+	private void evaluateInput() {
+		// Evaluates input based on keyHandler variables
 	}
 	
 	private void cleanup() {
@@ -61,14 +39,9 @@ public class Player extends FightingGameEntity implements Runnable{
 	@Override
 	public void run(){
 		while (!gameOver()) {
-			// Game state will be updated
-			updateGameState();
-			
 			// User input will be checked for
-			checkForInput();
+			evaluateInput();
 			
-			// Players actions/movements will be synchronized
-			synchronizePlayers();
 		}
 	}
 

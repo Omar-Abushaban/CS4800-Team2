@@ -53,6 +53,10 @@ public class UI{
 		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 	}
 	
+	private void drawPlayer(int x, int y) {
+		
+	}
+	
 	private void drawAchievementsMenu(){
 		// BG COLOR
 		g2.setColor(new Color(33, 33, 33));

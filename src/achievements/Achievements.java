@@ -20,8 +20,8 @@ public class Achievements {
 	boolean isDisplaying;
 	int displayingAchievement = -1; // KEEP THIS -1 (Means nothing is displaying)!
 	public boolean[] achievementsArray; 
-	public String[] achievementsTitles = {"Just Starting", "The Noob", "Back to Square One", "The AFKiller", "Flawless"};
-	public String[] achievementsDescriptions = {"Play your first game", "Complete your first game", "Win a game standing in starting spot", "Kill an AFK Player", 
+	public String[] achievementsTitles = {"Welcome", "The Noob", "Back to Square One", "The AFKiller", "Flawless"};
+	public String[] achievementsDescriptions = {"Start your first game", "Complete your first game", "Win a game standing in starting spot", "Kill an AFK Player", 
 												"Win without taking damage"};
 	ReentrantLock isDisplayingLock 			= new ReentrantLock();
 	ReentrantLock displayingAchievementLock = new ReentrantLock();

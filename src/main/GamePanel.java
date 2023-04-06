@@ -16,7 +16,15 @@ public class GamePanel extends JPanel implements Runnable{
 	final int screenHeight = 900;
 	
 	// GAME
-	public KeyHandler keyH = new KeyHandler(this);
+	String player1Name = "Player 1";
+	String player2Name = "Player 2";
+	
+	//FIXME !!!! IF WE DO ALLOW USERS TO CHANGE NAMES, ENSURE NO TWO PLAYERS HAVE THE SAME NAME !!!
+	public Keybinds keybinds1 = new Keybinds(player1Name);
+	public Keybinds keybinds2 = new Keybinds(player2Name);
+	
+	public KeyHandler keyH1 = new KeyHandler(this, keybinds1, 1);
+	public KeyHandler keyH2 = new KeyHandler(this, keybinds2, 2);
 	int FPS = 60;
 	Thread gameThread;
 	String winner;
@@ -28,8 +36,8 @@ public class GamePanel extends JPanel implements Runnable{
 	UI ui = new UI(this);
 	
 	// PLAYERS
-	Player player1 = new Player(1);
-	Player player2 = new Player(2);
+	Player player1 = new Player("Player 1", this, keyH1);
+	Player player2 = new Player("Player 2", this, keyH2);
 	
 	// GAME STATES
 	public enum GameState {
@@ -41,7 +49,8 @@ public class GamePanel extends JPanel implements Runnable{
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		this.setBackground(Color.black);
 		this.setDoubleBuffered(true);
-		this.addKeyListener(keyH);
+		this.addKeyListener(keyH1);
+		this.addKeyListener(keyH2);
 		this.setFocusable(true);
 	}
 
