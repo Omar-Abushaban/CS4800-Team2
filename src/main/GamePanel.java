@@ -3,11 +3,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.JPanel;
 
 import achievements.Achievements;
 import entity.Player;
+
 
 public class GamePanel extends JPanel implements Runnable{
 	
@@ -36,8 +38,24 @@ public class GamePanel extends JPanel implements Runnable{
 	UI ui = new UI(this);
 	
 	// PLAYERS
-	Player player1 = new Player("Player 1", this, keyH1);
-	Player player2 = new Player("Player 2", this, keyH2);
+	Player player1 = new Player("Player 1", this, keyH1, 1);
+	Player player2 = new Player("Player 2", this, keyH2, 2);
+	Thread player1Thread;
+	Thread player2Thread;
+	
+	// SEMAPHORES/MUTEXES FOR GAME ORDER
+	public Semaphore player1Sem;
+	public Semaphore player2Sem;
+	public Semaphore achieveSem;
+	public Semaphore gamePanelSem;
+	
+	public void initializeSemaphores() {
+		player1Sem = new Semaphore(1);
+		player2Sem = new Semaphore(0);
+		achieveSem = new Semaphore(0);
+		gamePanelSem = new Semaphore(0);
+	}
+	
 	
 	// GAME STATES
 	public enum GameState {
@@ -54,6 +72,14 @@ public class GamePanel extends JPanel implements Runnable{
 		this.setFocusable(true);
 	}
 
+	public void startInGame() {
+		player1.setStartValues(50, screenHeight/2);
+		player2.setStartValues(screenWidth-50-player1.width, screenHeight/2);
+		player1Thread = new Thread(player1);
+		player2Thread = new Thread(player2);
+		player1Thread.start();
+		player2Thread.start();
+	}
 	
 	public void setupGame() {
 		// Pass
@@ -72,14 +98,38 @@ public class GamePanel extends JPanel implements Runnable{
 		long currentTime;
 		
 		while(gameThread != null) {
-			currentTime = System.nanoTime();
-			delta += (currentTime - lastTime) / drawInterval;
-			lastTime = currentTime;
+			// In game we only want to render after players/achievements have been calculated for
+			if (gameState == GameState.InGame) {
+				try{
+					gamePanelSem.acquire();
+					System.out.println("Game Thread");
+					currentTime = System.nanoTime();
+					delta += (currentTime - lastTime) / drawInterval;
+					lastTime = currentTime;
+					
+					if (delta >= 1) {
+						update();
+						repaint();
+						delta--;
+					}
+				} catch (InterruptedException e){
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					player1Sem.release();
+				}
+			}
 			
-			if (delta >= 1) {
-				update();
-				repaint();
-				delta--;
+			else {
+				currentTime = System.nanoTime();
+				delta += (currentTime - lastTime) / drawInterval;
+				lastTime = currentTime;
+				
+				if (delta >= 1) {
+					update();
+					repaint();
+					delta--;
+				}				
 			}
 		}	
 	}
@@ -106,6 +156,8 @@ public class GamePanel extends JPanel implements Runnable{
 			break;
 		case InGame:
 			ui.draw(g2);
+			player1.draw(g2);
+			player2.draw(g2);
 			break;
 		case MainMenu:
 			ui.draw(g2);

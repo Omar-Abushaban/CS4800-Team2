@@ -1,4 +1,5 @@
 package entity;
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 import main.GamePanel;
@@ -8,11 +9,21 @@ public class Player extends Entity implements Runnable{
 	KeyHandler keyH;
 	GamePanel gp;
 	String name;
+	int playerNum;
 	
-	public Player(String playerName, GamePanel gp, KeyHandler kh) {
+	public Player(String playerName, GamePanel gp, KeyHandler kh, int playerNum) {
 		this.name = playerName;
 		this.gp = gp;
 		this.keyH = kh;
+		this.playerNum = playerNum;
+	}
+	
+	public void setStartValues(int x, int y) {
+		this.x = x;
+		this.y = y;
+		this.hp = 100;
+		this.xVelocity = 5;
+		//this.yVelocity = 2;
 	}
 	
 	public void setMovementAnimations(int frame) {
@@ -29,7 +40,12 @@ public class Player extends Entity implements Runnable{
 	}
 	
 	private void evaluateInput() {
-		// Evaluates input based on keyHandler variables
+		if (keyH.moveRight)
+			x += xVelocity;
+		if (keyH.moveLeft)
+			x -= xVelocity;
+		
+		//TODO add crouch/jump function
 	}
 	
 	private void cleanup() {
@@ -39,18 +55,35 @@ public class Player extends Entity implements Runnable{
 	@Override
 	public void run(){
 		while (!gameOver()) {
-			// User input will be checked for
-			evaluateInput();
-			
+			if (playerNum == 1) {
+				try{
+					gp.player1Sem.acquire();
+					System.out.println(name);
+					evaluateInput();
+					} catch (InterruptedException ie) {
+						ie.printStackTrace();
+					} finally {
+						gp.player2Sem.release();
+					}
+			} 
+			else if (playerNum == 2) {
+				try{
+					gp.player2Sem.acquire();
+					System.out.println(name);
+					evaluateInput();
+					
+				} catch (InterruptedException ie) {
+					ie.printStackTrace();
+				} finally {
+					gp.achieveSem.release();
+				}				
+			}
 		}
 	}
-
-	public void update(){
-		// TODO Auto-generated method stub
-		
-	}
 	
-	public void render(Graphics2D g2) {
+	public void draw(Graphics2D g2) {
+		g2.setColor(Color.white);
 		
+		g2.fillRect(x, y, width, height);
 	}
 }

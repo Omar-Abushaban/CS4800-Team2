@@ -14,8 +14,10 @@ public class Main{
 		
 		window.pack();
 		
+		gamePanel.initializeSemaphores();
 		gamePanel.setupGame();
 		gamePanel.startGameThread();
+		
 		
 		gamePanel.achievements.startProducerThread();
 		

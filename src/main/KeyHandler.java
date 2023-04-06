@@ -11,7 +11,7 @@ public class KeyHandler implements KeyListener{
 	Keybinds keybinds;
 	int playerNum;
 	
-	boolean moveRight, moveLeft, jump, crouch, attack; 
+	public boolean moveRight, moveLeft, jump, crouch, attack; 
 	
 	public KeyHandler(GamePanel gp, Keybinds keybinds, int playerNum) {
 		this.gp = gp;
@@ -34,8 +34,10 @@ public class KeyHandler implements KeyListener{
 			if (playerNum == 1) {
 				if (keycode == KeyEvent.VK_ESCAPE)
 					gp.gameState = GameState.MainMenu;
-				if (keycode == KeyEvent.VK_ENTER)
+				if (keycode == KeyEvent.VK_ENTER) {
 					gp.gameState = GameState.InGame;
+					gp.startInGame();
+				}
 			}
 			break;
 		case GameOver:

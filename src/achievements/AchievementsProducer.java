@@ -15,7 +15,17 @@ public class AchievementsProducer implements Runnable {
 	public void run(){
 		while(true) { // RUNS IN LOOP, MAY ADD SEMAPHORES/ETC FOR CONTROL FLOW
 			if (gp.gameState == GameState.InGame) {
-				checkForInGameAchievements();
+				try{
+					gp.achieveSem.acquire();
+					System.out.println("Achievement Thread");
+					checkForInGameAchievements();
+				} catch (InterruptedException e){
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					gp.gamePanelSem.release();					
+				}
+				
 			} else if (gp.gameState == GameState.GameOver) {
 				checkForEndGameAchievements();
 			}
