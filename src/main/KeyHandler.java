@@ -49,6 +49,18 @@ public class KeyHandler implements KeyListener{
 				if (keycode == KeyEvent.VK_ENTER || keycode == KeyEvent.VK_ESCAPE)
 					gp.gameState = GameState.GameOver;				
 			}
+			//TODO IN GAME CODE
+			if (keycode == keybinds.getKeybind("moveRight"))
+				moveRight = true;
+			else if (keycode == keybinds.getKeybind("moveLeft"))
+				moveLeft = true;
+			else if (keycode == keybinds.getKeybind("jump"))
+				jump = true;
+			else if (keycode == keybinds.getKeybind("crouch"))
+				crouch = true;
+			else if (keycode == keybinds.getKeybind("attack"))
+				attack = true;
+			
 			break;
 		case MainMenu:
 			// ONLY PLAYER 1 CAN GO THROUGH MENUS
@@ -100,6 +112,20 @@ public class KeyHandler implements KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent e){
+		//TODO IN GAME CODE
+		int keycode = e.getKeyCode();
 		
+		if (gp.gameState == GameState.InGame) {
+			if (keycode == keybinds.getKeybind("moveRight"))
+				moveRight = false;
+			else if (keycode == keybinds.getKeybind("moveLeft"))
+				moveLeft = false;
+			else if (keycode == keybinds.getKeybind("jump"))
+				jump = false;
+			else if (keycode == keybinds.getKeybind("crouch"))
+				crouch = false;
+			else if (keycode == keybinds.getKeybind("attack"))
+				attack = false;
+		}
 	}
 }
