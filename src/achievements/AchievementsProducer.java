@@ -17,7 +17,7 @@ public class AchievementsProducer implements Runnable {
 			if (gp.gameState == GameState.InGame) {
 				try{
 					gp.achieveSem.acquire();
-					System.out.println("Achievement Thread");
+					//System.out.println("Achievement Thread");
 					checkForInGameAchievements();
 				} catch (InterruptedException e){
 					// TODO Auto-generated catch block

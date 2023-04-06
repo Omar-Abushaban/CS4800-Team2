@@ -40,8 +40,9 @@ public class Player extends Entity implements Runnable{
 	}
 	
 	private void evaluateInput() {
-		if (keyH.moveRight)
-			x += xVelocity;
+		if (keyH.moveRight) {
+			x += xVelocity;		
+		}
 		if (keyH.moveLeft)
 			x -= xVelocity;
 		
@@ -58,7 +59,7 @@ public class Player extends Entity implements Runnable{
 			if (playerNum == 1) {
 				try{
 					gp.player1Sem.acquire();
-					System.out.println(name);
+					//System.out.println(name);
 					evaluateInput();
 					} catch (InterruptedException ie) {
 						ie.printStackTrace();
@@ -69,7 +70,7 @@ public class Player extends Entity implements Runnable{
 			else if (playerNum == 2) {
 				try{
 					gp.player2Sem.acquire();
-					System.out.println(name);
+					//System.out.println(name);
 					evaluateInput();
 					
 				} catch (InterruptedException ie) {

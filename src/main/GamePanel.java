@@ -96,22 +96,36 @@ public class GamePanel extends JPanel implements Runnable{
 		double delta = 0;
 		long lastTime = System.nanoTime();
 		long currentTime;
+		long timer = 0;
+		int drawCount = 0;
 		
 		while(gameThread != null) {
 			// In game we only want to render after players/achievements have been calculated for
 			if (gameState == GameState.InGame) {
 				try{
 					gamePanelSem.acquire();
-					System.out.println("Game Thread");
-					currentTime = System.nanoTime();
-					delta += (currentTime - lastTime) / drawInterval;
-					lastTime = currentTime;
-					
-					if (delta >= 1) {
-						update();
-						repaint();
-						delta--;
+					//System.out.println("Game Thread");
+					while(gameThread != null) {
+						currentTime = System.nanoTime();
+						delta += (currentTime - lastTime) / drawInterval;
+						timer += (currentTime - lastTime);
+						lastTime = currentTime;
+						
+						if (delta >= 1) {
+							update();
+							repaint();
+							delta--;
+							drawCount++;
+							break;
+						}
+						
+						if(timer >= 1000000000) {
+							System.out.println("FPS: " + drawCount);
+							drawCount = 0;
+							timer = 0;
+						}
 					}
+					
 				} catch (InterruptedException e){
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -135,8 +149,6 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	
 	public void update() {
-		//player1.update();
-		//player2.update();
 		
 	}
 	
