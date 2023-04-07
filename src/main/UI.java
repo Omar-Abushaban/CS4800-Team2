@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 
 public class UI{
 	
@@ -18,7 +19,10 @@ public class UI{
 	
 	public void draw(Graphics2D g2) {
 		this.g2 = g2;
+		
+		// Default font settings
 		g2.setColor(Color.white);
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		
 		switch(gp.gameState) {
 		case CharacterSelect:

@@ -18,7 +18,7 @@ public class Keybinds{
 	FileWriter writer;
 	
 	public Keybinds(String playerName){
-		filePath = "data/keybind_" + playerName + ".txt";
+		filePath = "res/keybinds/keybind_" + playerName + ".txt";
 		file = new File(filePath);
 		if (file.exists())
 			loadKeybinds(playerName);

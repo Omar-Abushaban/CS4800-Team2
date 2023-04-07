@@ -31,7 +31,7 @@ public class Achievements {
 	public Achievements(GamePanel gp){
 		this.gp = gp;
 		achievementsArray = new boolean[numTotalAchievements];
-		filePath = "data/achievementsData.txt";
+		filePath = "res/data/achievementsData.txt";
 		fileLock.lock();
 		file = new File(filePath);
 		isDisplaying = false;
