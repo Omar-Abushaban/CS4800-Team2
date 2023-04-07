@@ -3,6 +3,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.image.BufferedImage;
 import java.util.concurrent.Semaphore;
 
 import javax.swing.JPanel;
@@ -13,23 +16,29 @@ import entity.Player;
 
 public class GamePanel extends JPanel implements Runnable{
 	
-	// SCREEN SETTINGS/DIMENSIONS
+	// SCREEN
 	final int screenWidth = 1600;
 	final int screenHeight = 900;
-	
+	int fullscreenWidth = screenWidth;
+	int fullscreenHeight = screenHeight;
+	BufferedImage screenBuffer;
+	Graphics2D g2;
+		
 	// GAME
 	String player1Name = "Player 1";
 	String player2Name = "Player 2";
-	
-	//FIXME !!!! IF WE DO ALLOW USERS TO CHANGE NAMES, ENSURE NO TWO PLAYERS HAVE THE SAME NAME !!!
-	public Keybinds keybinds1 = new Keybinds(player1Name);
-	public Keybinds keybinds2 = new Keybinds(player2Name);
-	
-	public KeyHandler keyH1 = new KeyHandler(this, keybinds1, 1);
-	public KeyHandler keyH2 = new KeyHandler(this, keybinds2, 2);
-	int FPS = 60;
 	Thread gameThread;
 	String winner;
+	
+	//FIXME !!!! IF WE DO ALLOW USERS TO CHANGE NAMES, ENSURE NO TWO PLAYERS HAVE THE SAME NAME !!!
+	//KEYBINDS / KEYHANDLER
+	public Keybinds keybinds1 = new Keybinds(player1Name);
+	public Keybinds keybinds2 = new Keybinds(player2Name);
+	public KeyHandler keyH1 = new KeyHandler(this, keybinds1, 1);
+	public KeyHandler keyH2 = new KeyHandler(this, keybinds2, 2);
+	
+	// FPS
+	int FPS = 60;
 	
 	// ACHIEVEMENTS
 	public Achievements achievements = new Achievements(this);
@@ -49,19 +58,13 @@ public class GamePanel extends JPanel implements Runnable{
 	public Semaphore achieveSem;
 	public Semaphore gamePanelSem;
 	
-	public void initializeSemaphores() {
-		player1Sem = new Semaphore(1);
-		player2Sem = new Semaphore(0);
-		achieveSem = new Semaphore(0);
-		gamePanelSem = new Semaphore(0);
-	}
 	
 	
 	// GAME STATES
 	public enum GameState {
 		MainMenu, AchievementsMenu, Options, CharacterSelect, InGame, GameOver;
 	}
-	public GameState gameState = GameState.MainMenu;
+	public GameState gameState;
 	
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -82,7 +85,26 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	
 	public void setupGame() {
-		// Pass
+		gameState = GameState.MainMenu;
+		// Buffer image to draw to
+		screenBuffer = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
+		g2 = (Graphics2D)screenBuffer.getGraphics();
+	}
+	
+	public void enableFullscreen() {
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice gd = ge.getDefaultScreenDevice();
+		gd.setFullScreenWindow(Main.window);
+		
+		fullscreenWidth = Main.window.getWidth();
+		fullscreenHeight = Main.window.getHeight();
+	}
+	
+	public void initializeSemaphores() {
+		player1Sem = new Semaphore(1);
+		player2Sem = new Semaphore(0);
+		achieveSem = new Semaphore(0);
+		gamePanelSem = new Semaphore(0);
 	}
 	
 	public void startGameThread() {
@@ -112,8 +134,8 @@ public class GamePanel extends JPanel implements Runnable{
 						lastTime = currentTime;
 						
 						if (delta >= 1) {
-							update();
-							repaint();
+							drawScreenBuffer();
+							drawToScreen();
 							delta--;
 							drawCount++;
 							break;
@@ -140,24 +162,15 @@ public class GamePanel extends JPanel implements Runnable{
 				lastTime = currentTime;
 				
 				if (delta >= 1) {
-					update();
-					repaint();
+					drawScreenBuffer();
+					drawToScreen();
 					delta--;
 				}				
 			}
 		}	
 	}
 	
-	public void update() {
-		
-	}
-	
-	@Override
-	public void paintComponent(Graphics g) {
-		// 2D Graphics for sprites/etc
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D)g;
-		
+	public void drawScreenBuffer() {
 		// DRAW ACCORDING TO GAME STATE
 		switch(gameState) {
 		case CharacterSelect:
@@ -182,7 +195,12 @@ public class GamePanel extends JPanel implements Runnable{
 			break;
 		default:
 			break;
-		}
-		g2.dispose();
+		}		
+	}
+	
+	public void drawToScreen() {
+		Graphics g = getGraphics();
+		g.drawImage(screenBuffer, 0, 0, fullscreenWidth, fullscreenHeight, null);
+		g.dispose();
 	}
 }

@@ -53,9 +53,6 @@ public class UI{
 		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 	}
 	
-	private void drawPlayer(int x, int y) {
-		
-	}
 	
 	private void drawAchievementsMenu(){
 		// BG COLOR
@@ -223,19 +220,19 @@ public class UI{
 		
 		text = "OPTIONS";
 		x = centerX(text);
-		y += gp.screenHeight / 10;
+		y += 75;
 		mainMenuXYs[1] = new Point(x, y);
 		g2.drawString(text, x, y);
 		
 		text = "ACHIEVEMENTS";
 		x = centerX(text);
-		y += gp.screenHeight / 10;
+		y += 75;
 		mainMenuXYs[2] = new Point(x, y);
 		g2.drawString(text, x, y);
 		
 		text = "EXIT";
 		x = centerX(text);
-		y += gp.screenHeight / 10;
+		y += 75;
 		mainMenuXYs[3] = new Point(x, y);
 		g2.drawString(text, x, y);
 		
