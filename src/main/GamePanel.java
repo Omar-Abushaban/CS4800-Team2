@@ -17,8 +17,8 @@ import entity.Player;
 public class GamePanel extends JPanel implements Runnable{
 	
 	// SCREEN
-	final int screenWidth = 1600;
-	final int screenHeight = 900;
+	public final int screenWidth = 1600;
+	public final int screenHeight = 900;
 	int fullscreenWidth = screenWidth;
 	int fullscreenHeight = screenHeight;
 	BufferedImage screenBuffer;

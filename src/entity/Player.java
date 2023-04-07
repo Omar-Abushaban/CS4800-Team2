@@ -41,12 +41,22 @@ public class Player extends Entity implements Runnable{
 	
 	private void evaluateInput() {
 		if (keyH.moveRight) {
-			x += xVelocity;		
+			x = min(x + xVelocity, gp.screenWidth-width);
 		}
-		if (keyH.moveLeft)
-			x -= xVelocity;
+		
+		if (keyH.moveLeft) {
+			x = max(x - xVelocity, 0);
+		}
 		
 		//TODO add crouch/jump function
+	}
+	
+	private int min(int i, int j){
+		return (i < j) ? i : j;
+	}
+	
+	private int max(int i, int j) {
+		return (i > j) ? i : j;
 	}
 	
 	private void cleanup() {
