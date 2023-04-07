@@ -39,7 +39,7 @@ public class Player extends Entity implements Runnable{
 	public void setStartValues(int x, int y) {
 		this.x = x;
 		this.y = y;
-		this.hp = 100;
+		this.hp = 5;
 		this.xVelocity = 5;
 		
 		healthBarWidth = gp.screenWidth / 2 - 75;
@@ -104,12 +104,24 @@ public class Player extends Entity implements Runnable{
 		
 		// Health bar
 		g2.setColor(Color.black);
-		g2.fillRect(healthBarStart, 0, healthBarWidth, healthBarHeight);
-		g2.setColor(Color.decode("#E20501"));
-		g2.fillRect(healthBarStart+2, 2, healthBarWidth-4, healthBarHeight-4);
+		g2.drawRect(healthBarStart, 0, healthBarWidth-1, healthBarHeight-1);
 		
-		remainingWidth = hp*(healthBarWidth-4)/100;
-		g2.setColor(Color.decode("#21FF00"));
-		g2.fillRect(healthBarStart+2, 2, remainingWidth, healthBarHeight-4);
+		int red, blue;
+		if (hp >= 50) {
+			blue = 255;
+			red = (int)((255.0/50.0) * (100-hp));
+		}
+		else {
+			blue = (int)(hp/100.0 * 255.0);
+			red = 255;
+		}
+		remainingWidth = hp*(healthBarWidth-2)/100;
+		System.out.println(red + " " + blue);
+		g2.setColor(new Color(red, 0, blue));
+		
+		if (playerNum == 2)
+			g2.fillRect(healthBarStart+1, 1, remainingWidth, healthBarHeight-2);
+		else
+			g2.fillRect(healthBarWidth-1-remainingWidth, 1, remainingWidth, healthBarHeight-2);
 	}
 }
