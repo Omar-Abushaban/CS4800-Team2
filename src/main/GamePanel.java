@@ -30,7 +30,7 @@ public class GamePanel extends JPanel implements Runnable{
 	boolean gameOver;
 	Thread gameThread;
 	String winner;
-	public int roundTime = 90;
+	public int roundTime;
 	
 	//FIXME !!!! IF WE DO ALLOW USERS TO CHANGE NAMES, ENSURE NO TWO PLAYERS HAVE THE SAME NAME !!!
 	//KEYBINDS / KEYHANDLER
@@ -86,6 +86,8 @@ public class GamePanel extends JPanel implements Runnable{
 		player2Thread = new Thread(player2);
 		player1Thread.start();
 		player2Thread.start();
+		
+		roundTime = 90;
 	}
 	
 	public boolean gameOver() {
