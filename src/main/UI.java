@@ -33,6 +33,7 @@ public class UI{
 			break;
 		case InGame:
 			drawInGame();
+			drawTimer();
 			break;
 		case MainMenu:
 			drawMainMenu();
@@ -52,8 +53,28 @@ public class UI{
 	}
 	
 	
+	private void drawTimer(){
+		int startBoxX = gp.player1.healthBarWidth;
+		int boxWidth = gp.player2.healthBarStart - gp.player1.healthBarWidth;
+		int boxHeight = gp.player1.healthBarHeight;
+		
+		g2.setColor(Color.black);
+		g2.fillRect(startBoxX, 0, boxWidth, boxHeight);
+		
+		int fontSize = 60;
+		
+		g2.setFont(g2.getFont().deriveFont(Font.BOLD, fontSize));
+		g2.setColor(Color.white);
+		String text = Integer.toString(gp.roundTime);
+		int x = centerX(text);
+		int y = boxHeight - 2;
+		
+		g2.drawString(text, x, y);
+		
+	}
+
 	private void drawInGame(){
-		g2.setColor(new Color(51, 56, 166));
+		g2.setColor(new Color(33, 33, 33));
 		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
 	}
 	

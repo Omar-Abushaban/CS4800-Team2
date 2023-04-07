@@ -22,7 +22,6 @@ public class Main{
 		gamePanel.initializeSemaphores();
 		gamePanel.startGameThread();
 		
-		
 		gamePanel.achievements.startProducerThread();
 		
 		window.setLocationRelativeTo(null); // center of screen

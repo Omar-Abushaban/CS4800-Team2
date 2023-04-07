@@ -27,8 +27,10 @@ public class GamePanel extends JPanel implements Runnable{
 	// GAME
 	String player1Name = "Player 1";
 	String player2Name = "Player 2";
+	boolean gameOver;
 	Thread gameThread;
 	String winner;
+	public int roundTime = 90;
 	
 	//FIXME !!!! IF WE DO ALLOW USERS TO CHANGE NAMES, ENSURE NO TWO PLAYERS HAVE THE SAME NAME !!!
 	//KEYBINDS / KEYHANDLER
@@ -38,26 +40,25 @@ public class GamePanel extends JPanel implements Runnable{
 	public KeyHandler keyH2 = new KeyHandler(this, keybinds2, 2);
 	
 	// FPS
-	int FPS = 60;
+	int FPS = 60; // Even if we make this higher, it'll just default to screens refresh rate when in fullscreen mode
 	
 	// ACHIEVEMENTS
 	public Achievements achievements = new Achievements(this);
 	
 	// UI
 	UI ui = new UI(this);
-	
-	// PLAYERS
-	Player player1 = new Player("Player 1", this, keyH1, 1);
-	Player player2 = new Player("Player 2", this, keyH2, 2);
-	Thread player1Thread;
-	Thread player2Thread;
-	
+
 	// SEMAPHORES/MUTEXES FOR GAME ORDER
 	public Semaphore player1Sem;
 	public Semaphore player2Sem;
 	public Semaphore achieveSem;
 	public Semaphore gamePanelSem;
 	
+	// PLAYERS
+	Player player1;
+	Player player2;
+	Thread player1Thread;
+	Thread player2Thread;
 	
 	
 	// GAME STATES
@@ -76,12 +77,22 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 
 	public void startInGame() {
+		player1 = new Player("Player 1", this, keyH1, player1Sem, player2Sem);
+		player2 = new Player("Player 2", this, keyH2, player2Sem, achieveSem);
+		
 		player1.setStartValues(50, screenHeight/2);
 		player2.setStartValues(screenWidth-50-player1.width, screenHeight/2);
 		player1Thread = new Thread(player1);
 		player2Thread = new Thread(player2);
 		player1Thread.start();
 		player2Thread.start();
+	}
+	
+	public boolean gameOver() {
+		if (gameState == GameState.GameOver)
+			return true;
+		else
+			return false;
 	}
 	
 	public void setupGame() {
@@ -133,6 +144,23 @@ public class GamePanel extends JPanel implements Runnable{
 						timer += (currentTime - lastTime);
 						lastTime = currentTime;
 						
+						if(timer >= 1000000000) {
+							//System.out.println("FPS: " + drawCount);
+							roundTime--;
+							drawCount = 0;
+							timer = 0;
+							
+							if(roundTime == 0) {
+								gameState = GameState.GameOver;
+								if(player1.getHealth() >= player2.getHealth()) {
+									winner = player1Name;
+								}
+								else {
+									winner = player2Name;
+								}
+							}
+						}
+
 						if (delta >= 1) {
 							drawScreenBuffer();
 							drawToScreen();
@@ -141,11 +169,6 @@ public class GamePanel extends JPanel implements Runnable{
 							break;
 						}
 						
-						if(timer >= 1000000000) {
-							System.out.println("FPS: " + drawCount);
-							drawCount = 0;
-							timer = 0;
-						}
 					}
 					
 				} catch (InterruptedException e){
