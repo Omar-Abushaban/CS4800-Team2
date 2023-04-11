@@ -80,8 +80,8 @@ public class GamePanel extends JPanel implements Runnable{
 		player1 = new Player("Player 1", this, keyH1, player1Sem, player2Sem);
 		player2 = new Player("Player 2", this, keyH2, player2Sem, achieveSem);
 		
-		player1.setStartValues(50, screenHeight/2);
-		player2.setStartValues(screenWidth-50-player1.width, screenHeight/2);
+		player1.setStartValues(50);
+		player2.setStartValues(screenWidth-50-player1.width);
 		player1Thread = new Thread(player1);
 		player2Thread = new Thread(player2);
 		player1Thread.start();
@@ -206,8 +206,6 @@ public class GamePanel extends JPanel implements Runnable{
 			break;
 		case InGame:
 			ui.draw(g2);
-			player1.draw(g2);
-			player2.draw(g2);
 			break;
 		case MainMenu:
 			ui.draw(g2);

@@ -18,6 +18,9 @@ public class Player extends Entity implements Runnable{
 	public int healthBarHeight;
 	public int healthBarStart;
 	int remainingWidth;
+	boolean isIdle, isAttacking, isJumping, isCrouching;
+	int jumpCounter = 0;
+	int floorY;
 	
 	public Player(String playerName, GamePanel gp, KeyHandler kh, Semaphore mySem, Semaphore nextSem) {
 		this.name = playerName;
@@ -25,6 +28,8 @@ public class Player extends Entity implements Runnable{
 		this.keyH = kh;
 		this.mySem = mySem;
 		this.nextSem = nextSem;
+		
+		floorY = gp.screenHeight/2;
 		
 		if (nextSem == gp.player2Sem) {
 			playerNum = 1;
@@ -36,10 +41,10 @@ public class Player extends Entity implements Runnable{
 		}
 	}
 	
-	public void setStartValues(int x, int y) {
+	public void setStartValues(int x) {
 		this.x = x;
-		this.y = y;
-		this.hp = 5;
+		this.y = floorY;
+		this.hp = 100;
 		this.xVelocity = 5;
 		
 		healthBarWidth = gp.screenWidth / 2 - 75;
@@ -59,15 +64,44 @@ public class Player extends Entity implements Runnable{
 	}
 	
 	private void evaluateInput() {
+		
+		// Moving/attacking
 		if (keyH.moveRight) {
 			x = min(x + xVelocity, gp.screenWidth-width);
 		}
-		
 		if (keyH.moveLeft) {
 			x = max(x - xVelocity, 0);
 		}
+		if (keyH.jump) {
+			if (y == floorY) {
+				isJumping = true;
+			}
+		}
 		
-		//TODO add crouch/jump function
+		// Gravity
+		y = min(y+10, floorY);
+		
+	}
+	
+	private void performActions() {
+		if (isJumping)
+			jump();
+		if (isCrouching)
+			crouch();
+	}
+	
+	private void jump() {
+		y -= 50;
+		
+		jumpCounter += 1;
+		if (jumpCounter == 6) {
+			isJumping = false;
+			jumpCounter = 0;
+		}
+	}
+	
+	private void crouch() {
+		// change hitboxes/animation?/etc
 	}
 	
 	private int min(int i, int j){
@@ -87,8 +121,9 @@ public class Player extends Entity implements Runnable{
 		while (!gp.gameOver()) {
 			try{
 				mySem.acquire();
-				//System.out.println(name);
 				evaluateInput();
+				performActions();
+				
 				} catch (InterruptedException ie) {
 					ie.printStackTrace();
 				} finally {
@@ -116,7 +151,6 @@ public class Player extends Entity implements Runnable{
 			red = 255;
 		}
 		remainingWidth = hp*(healthBarWidth-2)/100;
-		System.out.println(red + " " + blue);
 		g2.setColor(new Color(red, 0, blue));
 		
 		if (playerNum == 2)

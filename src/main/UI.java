@@ -33,6 +33,8 @@ public class UI{
 			break;
 		case InGame:
 			drawInGame();
+			gp.player1.draw(g2);
+			gp.player2.draw(g2);
 			drawTimer();
 			break;
 		case MainMenu:
@@ -76,6 +78,8 @@ public class UI{
 	private void drawInGame(){
 		g2.setColor(new Color(33, 33, 33));
 		g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+		
+		
 	}
 	
 	
@@ -135,19 +139,19 @@ public class UI{
 
 
 	private void drawAchievementOverlay(){
-		g2.setColor(new Color(10, 10, 10));
-		g2.fillRect(gp.screenWidth/4, 0, gp.screenWidth/2, 48+24+14);
+		g2.setColor(new Color(10, 10, 10, 156));
+		g2.fillRect(gp.screenWidth/4, gp.player1.healthBarHeight, gp.screenWidth/2, 48+24+14);
 		// ACHIEVEMENT COMPLETE! TEXT
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 48F)); // Bold and 96 Font Size
 		String text = "ACHIEVEMENT COMPLETE!";
 		int x = centerX(text);
-		int y = (48);
+		int y = (48 + gp.player1.healthBarHeight);
 		// ACHIEVEMENT COMPLETE! COLORS
 		g2.setColor(Color.decode("#FFC700"));
 		g2.drawString(text, x, y); // Render white text on top
 		// ACHIEVEMENT TEXT
 		g2.setFont(g2.getFont().deriveFont(Font.BOLD, 24F)); // Bold and 96 Font Size
-		text = gp.achievements.achievementsDescriptions[gp.achievements.getDisplayingNum()];			
+		text = gp.achievements.achievementsDescriptions[gp.achievements.getDisplayingNum()];
 		x = centerX(text);
 		y += 24 + 4;
 		// ACHIEVEMENT COLORS
