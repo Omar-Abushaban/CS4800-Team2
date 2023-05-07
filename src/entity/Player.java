@@ -29,6 +29,9 @@ public class Player extends Entity implements Runnable{
 		this.mySem = mySem;
 		this.nextSem = nextSem;
 		
+		//diana
+		getPlayer1Image();
+		
 		floorY = gp.screenHeight/2;
 		
 		if (nextSem == gp.player2Sem) {
@@ -158,4 +161,26 @@ public class Player extends Entity implements Runnable{
 		else
 			g2.fillRect(healthBarWidth-1-remainingWidth, 1, remainingWidth, healthBarHeight-2);
 	}
+	
+	//diana
+	public void getPlayer1Image()
+	{
+		try{
+			attack1 = ImageIO.read(getClass().getResourceAsStream("/player1/Attack_1.png"));
+			attack2 = ImageIO.read(getClass().getResourceAsStream("/player1/Attack_2.png"));
+			attack3 = ImageIO.read(getClass().getResourceAsStream("/player1/Attack_3.png"));
+			dead = ImageIO.read(getClass().getResourceAsStream("/player1/Dead.png"));
+			hurt = ImageIO.read(getClass().getResourceAsStream("/player1/Hurt.png"));
+			idle = ImageIO.read(getClass().getResourceAsStream("/player1/Idle.png"));
+			jump = ImageIO.read(getClass().getResourceAsStream("/player1/Jump.png"));
+			protection = ImageIO.read(getClass().getResourceAsStream("/player1/Protection.png"));
+			run = ImageIO.read(getClass().getResourceAsStream("/player1/Run.png"));
+			walk = ImageIO.read(getClass().getResourceAsStream("/player1/Walk1.png"));
+			//attack1 = ImageIO.read(getClass().getResourceAsStream("/player1/attack_1.png"));
+		}
+		catch(IOException e) {
+		e.printStackTrace();
+	}
+
+	} //end getPlayer1Image
 }
