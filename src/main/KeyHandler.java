@@ -47,10 +47,11 @@ public class KeyHandler implements KeyListener{
 			}
 			break;
 		case InGame:
-			if (playerNum == 1) {
-				if (keycode == KeyEvent.VK_ENTER || keycode == KeyEvent.VK_ESCAPE)
-					gp.gameState = GameState.GameOver;				
-			}
+			//DEBUG
+//			if (playerNum == 1) {
+//				if (keycode == KeyEvent.VK_ENTER || keycode == KeyEvent.VK_ESCAPE)
+//					gp.gameState = GameState.GameOver;				
+//			}
 			//TODO IN GAME CODE
 			if (keycode == keybinds.getKeybind("moveRight"))
 				moveRight = true;
@@ -78,7 +79,8 @@ public class KeyHandler implements KeyListener{
 				else if (keycode == KeyEvent.VK_ENTER) {
 					switch(gp.ui.menuIterator) {
 					case 0: // START
-						gp.gameState = GameState.CharacterSelect;
+						gp.gameState = GameState.InGame;
+						gp.startInGame();
 						break;
 					case 1: // OPTIONS
 						gp.gameState = GameState.Options;

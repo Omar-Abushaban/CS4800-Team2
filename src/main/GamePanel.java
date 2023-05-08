@@ -151,7 +151,6 @@ public class GamePanel extends JPanel implements Runnable{
 							roundTime--;
 							drawCount = 0;
 							timer = 0;
-							
 							if(roundTime == 0) {
 								gameState = GameState.GameOver;
 								if(player1.getHealth() >= player2.getHealth()) {
@@ -164,6 +163,38 @@ public class GamePanel extends JPanel implements Runnable{
 						}
 
 						if (delta >= 1) {
+							// Checks for attacks
+							if (player1.isAttacking() && player1.attackCounter == 1) {
+								int[] pHitbox = player2.getHitbox();
+								int[] aHitbox = player1.getAttackHitbox();
+								
+								if (pHitbox[0] < aHitbox[0] + aHitbox[2] &&
+									pHitbox[0] + pHitbox[2] > aHitbox[0] &&
+									pHitbox[1] < aHitbox[1] + aHitbox[3] && 
+									pHitbox[1] + pHitbox[3] > aHitbox[1]) {
+									player2.takeDamage();
+								}
+							}
+							if (player2.isAttacking() && player2.attackCounter == 1) {
+								int[] pHitbox = player1.getHitbox();
+								int[] aHitbox = player2.getAttackHitbox();
+								
+								if (pHitbox[0] < aHitbox[0] + aHitbox[2] &&
+									pHitbox[0] + pHitbox[2] > aHitbox[0] &&
+									pHitbox[1] < aHitbox[1] + aHitbox[3] && 
+									pHitbox[1] + pHitbox[3] > aHitbox[1]) {
+									player1.takeDamage();
+								}
+							}
+							if (player1.getHealth() <= 0) {
+								winner = player2.getUserName();
+								gameState = GameState.GameOver;
+							} else if (player2.getHealth() <= 0) {
+								winner = player1.getUserName();
+								gameState = GameState.GameOver;
+							}
+							
+							// Draw screen/game loop
 							drawScreenBuffer();
 							drawToScreen();
 							delta--;

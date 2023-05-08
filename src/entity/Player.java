@@ -1,7 +1,10 @@
 package entity;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.IOException;
 import java.util.concurrent.Semaphore;
+
+import javax.imageio.ImageIO;
 
 import main.GamePanel;
 import main.KeyHandler;
@@ -18,8 +21,11 @@ public class Player extends Entity implements Runnable{
 	public int healthBarHeight;
 	public int healthBarStart;
 	int remainingWidth;
-	boolean isIdle, isAttacking, isJumping, isCrouching;
+	boolean isIdle, isAttacking, isJumping, isCrouching, lookingLeft;
 	int jumpCounter = 0;
+	public int attackCounter = 0;
+	int[] attackHitbox = new int[4];
+	int[] playerHitbox = new int[4];
 	int floorY;
 	
 	public Player(String playerName, GamePanel gp, KeyHandler kh, Semaphore mySem, Semaphore nextSem) {
@@ -37,10 +43,12 @@ public class Player extends Entity implements Runnable{
 		if (nextSem == gp.player2Sem) {
 			playerNum = 1;
 			healthBarStart = 0;
+			lookingLeft = false;
 		}
 		else {
 			playerNum = 2;
 			healthBarStart = gp.screenWidth / 2 + 75;
+			lookingLeft = true;
 		}
 	}
 	
@@ -66,18 +74,38 @@ public class Player extends Entity implements Runnable{
 		return this.hp;
 	}
 	
+	public void takeDamage() {
+		hp -= 10;
+	}
+	
 	private void evaluateInput() {
 		
 		// Moving/attacking
 		if (keyH.moveRight) {
 			x = min(x + xVelocity, gp.screenWidth-width);
+			lookingLeft = false;
 		}
 		if (keyH.moveLeft) {
 			x = max(x - xVelocity, 0);
+			lookingLeft = true;
 		}
 		if (keyH.jump) {
 			if (y == floorY) {
 				isJumping = true;
+			}
+		}
+		if (keyH.attack) {
+			isAttacking = true;
+			if (lookingLeft) {
+				attackHitbox[0] = max(0, x-100);
+				attackHitbox[1] = y+height/4;
+				attackHitbox[2] = min(100, x);
+				attackHitbox[3] = 40;
+			} else {
+				attackHitbox[0] = x+width;
+				attackHitbox[1] = y+height/4;
+				attackHitbox[2] = min(gp.screenWidth-width-x, 100);
+				attackHitbox[3] = 40;				
 			}
 		}
 		
@@ -86,11 +114,35 @@ public class Player extends Entity implements Runnable{
 		
 	}
 	
+	private void attack() {
+		attackCounter += 1;
+		
+		if (attackCounter == 30) {
+			isAttacking = false;
+			attackCounter = 0;
+		}
+	}
+
+	public int[] getAttackHitbox() {
+		return attackHitbox;
+	}
+	
+	public int[] getHitbox() {
+		playerHitbox[0] = x;
+		playerHitbox[1] = y;
+		playerHitbox[2] = width;
+		playerHitbox[3] = height;
+		
+		return playerHitbox;
+	}
+	
 	private void performActions() {
 		if (isJumping)
 			jump();
 		if (isCrouching)
 			crouch();
+		if (isAttacking())
+			attack();
 	}
 	
 	private void jump() {
@@ -135,10 +187,20 @@ public class Player extends Entity implements Runnable{
 		}
 	}
 	
+	private void drawAttackHitbox(Graphics2D g2) {
+		g2.setColor(Color.red);
+		g2.fillRect(attackHitbox[0], attackHitbox[1], attackHitbox[2], attackHitbox[3]);
+	}
+	
 	public void draw(Graphics2D g2) {
 		// Player 
 		g2.setColor(Color.cyan);
 		g2.fillRect(x, y, width, height);
+		
+		// Attack DEBUG
+//		if (isAttacking() && attackCounter <= 6) {
+//			drawAttackHitbox(g2);
+//		}
 		
 		// Health bar
 		g2.setColor(Color.black);
@@ -183,4 +245,12 @@ public class Player extends Entity implements Runnable{
 	}
 
 	} //end getPlayer1Image
+
+	public boolean isAttacking(){
+		return isAttacking;
+	}
+
+	public String getUserName(){
+		return name;
+	}
 }
