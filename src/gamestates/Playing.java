@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.Semaphore;
 
 import entities.Enemy;
 import entities.Player;
@@ -28,10 +29,29 @@ public class Playing extends State implements StateMethods{
 	private BufferedImage playingBGImg;			// background
 	private boolean gameOver;
 	
+	public Semaphore playerSem; // Enables player input
+	public Semaphore enemySem; // Enables enemy input
+	public Semaphore gameSem; // Updates game
+	
+	private Thread playerThread;
+	private Thread enemyThread;
+	
 	public Playing(GameClass game) {
 		super(game);
 		createEntities();
 		playingBGImg = LoadnSave.getSpriteAtlas(LoadnSave.PLAYING_BACKGROUND_IMG);
+		
+		// Initializes semaphores for threads
+		gameSem = new Semaphore(1);
+		playerSem = new Semaphore(0);
+		enemySem = new Semaphore(0);
+		
+		// Run Player Threads
+		playerThread = new Thread(player);
+		enemyThread = new Thread(enemy);
+		
+		playerThread.start();
+		enemyThread.start();
 	}
 	
 	// initialize playing entities
@@ -49,10 +69,8 @@ public class Playing extends State implements StateMethods{
 	@Override
 	// update level and player in game logic
 	public void update() {
-		if (!paused) {			// not paused
+		if (!paused) {// not paused
 			levelManager.update();
-			player.update();
-			enemy.update();
 			//enemyManager.update();
 		} else {				// paused
 			pauseOverlay.update();
@@ -83,12 +101,25 @@ public class Playing extends State implements StateMethods{
 		player.resetAll();
 		enemy.resetAll();
 		//enemyManager.resetAllEnemies();
+		resetSemaphores();
+	}
+	
+	public void resetSemaphores() {
+		playerSem.drainPermits();
+		enemySem.drainPermits();
+		gameSem.drainPermits();
+		
+		gameSem.release(1);
 	}
 	
 	public void setGameOver(boolean gameOver) {
 		this.gameOver = gameOver;
 	}
-
+	
+	public boolean isGameOver() {
+		return gameOver;
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		//if (!gameOver)

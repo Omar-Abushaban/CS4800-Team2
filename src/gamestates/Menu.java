@@ -1,6 +1,5 @@
 package gamestates;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -101,8 +100,9 @@ public class Menu extends State implements StateMethods{
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_ENTER)
+		if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 			GameStates.state = GameStates.PLAYING;
+		}
 	}
 
 	@Override

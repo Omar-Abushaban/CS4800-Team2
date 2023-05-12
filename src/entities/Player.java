@@ -1,28 +1,27 @@
 package entities;
 
-import static utilities.Constants.AnimationConstants.*;
+import static utilities.Constants.AnimationConstants.ATTACK;
+import static utilities.Constants.AnimationConstants.DEAD;
+import static utilities.Constants.AnimationConstants.IDLE;
+import static utilities.Constants.AnimationConstants.JUMP;
+import static utilities.Constants.AnimationConstants.RUNNING;
 import static utilities.Constants.AnimationConstants.getAnimationCount;
-import static utilities.Constants.MovementConstants.DOWN;
-import static utilities.Constants.MovementConstants.LEFT;
-import static utilities.Constants.MovementConstants.RIGHT;
-import static utilities.Constants.MovementConstants.UP;
-import static utilities.HelpMethods.*;
+import static utilities.HelpMethods.canMoveHere;
+import static utilities.HelpMethods.getEntityXPosNextToWall;
+import static utilities.HelpMethods.getEntityYPosUnderRoofOrAboveFloor;
+import static utilities.HelpMethods.isEntityOnFloor;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.imageio.ImageIO;
 
 import gamestates.Playing;
 import main.GameClass;
 import utilities.LoadnSave;
 
 // This class contains all player functionality 
-public class Player extends Entity{
+public class Player extends Entity implements Runnable{
 
 	private BufferedImage[][] animations; // 2-D array to hold all character animations
 	private int animCount = 0; 			// if animCount >= animSpeed go to next animation
@@ -127,8 +126,8 @@ public class Player extends Entity{
 	public void render(Graphics g) {
 		g.drawImage(animations[playerAction][animIndex], (int) (hitbox.x - xDrawOffset) + flipX, (int) (hitbox.y - yDrawOffset), width * flipW, height, null);
 		//call drawHitBox() in Entity class
-		drawHitBox(g);
-		drawAttackBox(g);
+		//drawHitBox(g);
+		//drawAttackBox(g);
 		drawHealthBar(g);
 	}
 	
@@ -375,6 +374,18 @@ public class Player extends Entity{
 	public Rectangle2D.Float returnHitBox(){
 		return hitbox;
 	}
-	
-	
+
+	@Override
+	public void run(){
+		while(true) {			
+			try{
+				playing.playerSem.acquire();
+				update();
+			} catch (InterruptedException e){
+				e.printStackTrace();
+			} finally {
+				playing.enemySem.release();
+			}
+		}
+	}
 }

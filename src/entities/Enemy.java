@@ -1,10 +1,9 @@
 package entities;
 
 import static utilities.Constants.EnemyConstants.ATTACK;
-import static utilities.Constants.EnemyConstants.IDLE;
-import static utilities.Constants.EnemyConstants.HIT;
-import static utilities.Constants.EnemyConstants.RUNNING;
 import static utilities.Constants.EnemyConstants.DEAD;
+import static utilities.Constants.EnemyConstants.IDLE;
+import static utilities.Constants.EnemyConstants.RUNNING;
 import static utilities.Constants.EnemyConstants.getAnimationCount;
 import static utilities.HelpMethods.canMoveHere;
 import static utilities.HelpMethods.getEntityXPosNextToWall;
@@ -21,7 +20,7 @@ import main.GameClass;
 import utilities.LoadnSave;
 
 // represents the enemy entity
-public class Enemy extends Entity{
+public class Enemy extends Entity implements Runnable{
 	
 	private BufferedImage[][] animations; // 2-D array to hold all character animations
 	private int animCount = 0; 			// if animCount >= animSpeed go to next animation
@@ -131,8 +130,8 @@ public class Enemy extends Entity{
 	public void render(Graphics g) {
 		g.drawImage(animations[playerAction][animIndex], (int) (hitbox.x - xDrawOffset) + flipX, (int) (hitbox.y - yDrawOffset), width * flipW, height, null);
 		//call drawHitBox() in Entity class
-		drawHitBox(g);
-		drawAttackBox(g);
+		//drawHitBox(g);
+		//drawAttackBox(g);
 		drawHealthBar(g);
 	}
 		
@@ -386,5 +385,18 @@ public class Enemy extends Entity{
 	public int getEnemyHeight() {
 		return CRABBY_HEIGHT;
 	}
-		
+
+	@Override
+	public void run(){
+		while(true) {
+			try{
+				playing.enemySem.acquire();
+				update();
+			} catch (InterruptedException e){
+				e.printStackTrace();
+			} finally {
+				playing.gameSem.release();
+			}			
+		}
+	}	
 }

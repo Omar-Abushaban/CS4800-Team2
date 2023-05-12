@@ -2,12 +2,9 @@ package main;
 
 import java.awt.Graphics;
 
-import entities.Player;
 import gamestates.GameStates;
 import gamestates.Menu;
 import gamestates.Playing;
-import levels.LevelManager;
-import utilities.LoadnSave;
 
 // The main class for the entire game. Initializes the game window, handlers, players/
 // enemies, etc.
@@ -62,7 +59,14 @@ public class GameClass implements Runnable {
 			menu.update();
 			break;
 		case PLAYING:
-			playing.update();
+			try { // Serializes Threads
+				playing.gameSem.acquire();
+				playing.update();
+			} catch(InterruptedException e) {
+				e.printStackTrace();
+			} finally {
+				playing.playerSem.release();
+			}
 			break;
 		case OPTIONS:
 		case QUIT:
@@ -104,6 +108,7 @@ public class GameClass implements Runnable {
 		double deltaF = 0;
 		
 		while(true) {
+			
 			
 			long currentTime = System.nanoTime();	// save current time
 			
