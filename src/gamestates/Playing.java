@@ -8,7 +8,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 import entities.Enemy;
-import entities.EnemyManager;
 import entities.Player;
 import levels.LevelManager;
 import main.GameClass;
