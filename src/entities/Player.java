@@ -84,6 +84,8 @@ public class Player extends Entity implements Runnable{
 
 	// Updates player in-game logic
 	public void update() {
+		if (hitbox.y + hitbox.height > 670)
+			currentHealth = 0;
 		updateHealthBar();
 		if (currentHealth <= 0) {
 			playing.setGameOver(true);
