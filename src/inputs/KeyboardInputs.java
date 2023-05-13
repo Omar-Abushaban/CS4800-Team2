@@ -5,7 +5,6 @@ import java.awt.event.KeyListener;
 
 import gamestates.GameStates;
 import main.GamePanel;
-import static utilities.Constants.MovementConstants.*;
 
 
 // Handles inputs from the keyboard using the KeyListener interface

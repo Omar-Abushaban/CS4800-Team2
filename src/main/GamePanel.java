@@ -1,20 +1,15 @@
 package main;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
-import inputs.KeyboardInputs;
-import inputs.MouseInputs;
-import utilities.LoadnSave;
-
-import static utilities.Constants.AnimationConstants.*;
-import static utilities.Constants.MovementConstants.*;
 import static main.GameClass.GAME_HEIGHT;
 import static main.GameClass.GAME_WIDTH;
+
+import java.awt.Dimension;
+import java.awt.Graphics;
+
+import javax.swing.JPanel;
+
+import inputs.KeyboardInputs;
+import inputs.MouseInputs;
 
 
 // The class for designing the contents in the game frame. The game panel can be thought of as
@@ -55,9 +50,10 @@ public class GamePanel extends JPanel {
 	// never called directly ,used by the JPanel constructor
 	// Graphics is the tool to draw on the panel
 	// updates all things concerned with game rendering/graphics via repaint()
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-			
+		requestFocus(true);
 		// calls the GameClass render function, which call the player render function to update player graphics
 		game.render(g);
 	}
