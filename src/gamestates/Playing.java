@@ -28,6 +28,7 @@ public class Playing extends State implements StateMethods{
 	private boolean paused = false;				// show pause screen or not 
 	private BufferedImage playingBGImg;			// background
 	private boolean gameOver;
+	public String winner;
 	
 	public Semaphore playerSem; // Enables player input
 	public Semaphore enemySem; // Enables enemy input
@@ -91,7 +92,7 @@ public class Playing extends State implements StateMethods{
 			g.fillRect(0, 0, GameClass.GAME_WIDTH, GameClass.GAME_HEIGHT);
 			pauseOverlay.draw(g);
 		} else if (gameOver)	// if game over
-			gameOverOverlay.draw(g);
+			gameOverOverlay.draw(g, winner);
 	}
 	
 	// reset all entities
@@ -101,6 +102,7 @@ public class Playing extends State implements StateMethods{
 		player.resetAll();
 		enemy.resetAll();
 		//enemyManager.resetAllEnemies();
+		setWinner("");
 		resetSemaphores();
 	}
 	
@@ -249,6 +251,10 @@ public class Playing extends State implements StateMethods{
 	// returns the player object
 	public Player getPlayer() {
 		return player;
+	}
+	
+	public void setWinner(String winner) {
+		this.winner = winner;
 	}
 	
 	// if player damages enemy reduce health by 5

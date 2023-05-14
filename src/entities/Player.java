@@ -88,6 +88,7 @@ public class Player extends Entity implements Runnable{
 			currentHealth = 0;
 		updateHealthBar();
 		if (currentHealth <= 0) {
+			playing.setWinner("Player 2");
 			playing.setGameOver(true);
 			setAnimation();
 			updateAnimation();

@@ -92,6 +92,7 @@ public class Enemy extends Entity implements Runnable{
 			currentHealth = 0;
 		updateHealthBar();
 		if (currentHealth <= 0) {	// a player had died
+			playing.setWinner("Player 1");
 			setAnimation();
 			updateAnimation();
 			playing.setGameOver(true);
