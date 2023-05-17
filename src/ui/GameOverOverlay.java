@@ -40,6 +40,11 @@ public class GameOverOverlay {
 		textWidth = g.getFontMetrics().stringWidth(text);
 		textHeight += 100;
 		g.drawString(text, (GameClass.GAME_WIDTH - textWidth) / 2, textHeight);
+		
+		text = "Press r to Restart Game!";
+		textWidth = g.getFontMetrics().stringWidth(text);
+		textHeight += 50;
+		g.drawString(text, (GameClass.GAME_WIDTH - textWidth) / 2, textHeight);
 
 	}
 
@@ -48,5 +53,9 @@ public class GameOverOverlay {
 			playing.resetAll();
 			GameStates.state = GameStates.MENU;
 		}
+		else if (e.getKeyCode() == KeyEvent.VK_R) {
+	        playing.resetAll();
+	        GameStates.state = GameStates.PLAYING;
+	    }
 	}
 }

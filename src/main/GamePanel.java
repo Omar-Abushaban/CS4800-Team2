@@ -25,7 +25,7 @@ public class GamePanel extends JPanel {
 		mouse = new MouseInputs(this);
 
 		this.game = game;
-		setPanelSize();
+		setPanelSize(1248, 672);
 		
 		// input listeners inside the game panel to receive inputs 
 		addKeyListener(new KeyboardInputs(this));
@@ -35,13 +35,11 @@ public class GamePanel extends JPanel {
 	}
 
 	// sets the dimensions of the game panel
-	public void setPanelSize() { 
-		Dimension size = new Dimension(GAME_WIDTH, GAME_HEIGHT);
-		setPreferredSize(size);		// sets the size of this component (our panel)
-		System.out.println("size:" + GAME_WIDTH + ": " + GAME_HEIGHT);
-		
-	}
-	
+	public void setPanelSize(int width, int height) { 
+		Dimension size = new Dimension(width, height);
+		setPreferredSize(size);
+		revalidate();
+	}	
 	// Updates all things concerned with the game logic
 	public void updateGame() {
 		

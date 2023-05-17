@@ -14,6 +14,7 @@ public class GameWindow {
 	
 	// constructor creates game frame
 	// param: GamePanel object  
+	
 	public GameWindow(GamePanel panel) {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);	// terminate program upon clicking exit button
@@ -38,6 +39,11 @@ public class GameWindow {
 			}
 			
 		});
+		
+	}
+
+	public void setSize(int parseInt, int parseInt2) {
+		// TODO Auto-generated method stub
 		
 	}
 }

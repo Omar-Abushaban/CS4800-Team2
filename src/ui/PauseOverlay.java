@@ -92,7 +92,7 @@ public class PauseOverlay {
 		}
 		else if (isIn(e, replayB)) {		// restart fight
 			if (replayB.isMousePressed())
-				System.out.println("Rematch!");
+				playing.getGame().restartGame();  
 		} 
 		else if (isIn(e, unpauseB)) {		// resume game
 			if (unpauseB.isMousePressed())

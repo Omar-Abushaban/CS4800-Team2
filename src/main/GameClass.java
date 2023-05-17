@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import gamestates.GameStates;
 import gamestates.Menu;
 import gamestates.Playing;
+import ui.OptionsDialog;
 
 // The main class for the entire game. Initializes the game window, handlers, players/
 // enemies, etc.
@@ -15,9 +16,11 @@ public class GameClass implements Runnable {
 	private Thread gameLoop;		// Thread that will run the game loop
 	private final int FPS = 120;	// set amount of frames/sec
 	private final int UPS = 150;	// set amount of updates/sec
-	
+	private GameStates previousState = null;
+    private MusicManager musicManager = new MusicManager();
 	private Playing playing;
 	private Menu menu;
+	private GameClass game;
 	
 	// level data
 	public final static int TILES_DEFAULT_SIZE = 32;
@@ -51,12 +54,28 @@ public class GameClass implements Runnable {
 		gameLoop = new Thread(this);
 		gameLoop.start();		// calls run()
 	}
+	public GameClass getGame() {
+	    return this.game;
+	  }
 	
+	public void restartGame() {
+		  // Reset the game state to PLAYING
+		  GameStates.state = GameStates.PLAYING;
+
+		  // Create game entities
+		  createEntities();
+
+		  // Reset any other necessary game data or states here...
+		}
 	// updates the game according to whatever game state were in
 	public void update() {
 		switch(GameStates.state) {
 		case MENU:
-			menu.update();
+			 menu.update();
+             if (previousState != GameStates.MENU) { // If state has just changed to MENU
+                 previousState = GameStates.MENU;
+                 musicManager.playMusic(GameStates.MENU);
+             }
 			break;
 		case PLAYING:
 			try { // Serializes Threads
@@ -67,9 +86,18 @@ public class GameClass implements Runnable {
 			} finally {
 				playing.playerSem.release();
 			}
+			if (previousState != GameStates.PLAYING) { // If state has just changed to PLAYING
+                previousState = GameStates.PLAYING;
+                musicManager.playMusic(GameStates.PLAYING);
+            }
 			break;
 		case OPTIONS:
+			OptionsDialog optionsDialog = new OptionsDialog(musicManager, window);
+			optionsDialog.setVisible(true);
+			break;
+			
 		case QUIT:
+			
 		default:
 			System.exit(0);
 			break;
